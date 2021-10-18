@@ -1,0 +1,21 @@
+[
+  {
+    "name": "Api3",
+    "base_url": "https://api3.vnexpress.net",
+    "api": [
+      {
+        "id": 1,
+        "name": "Tracking personal",
+        "route": "/api/users?type=read_article",
+        "queries": [
+          "article_id",
+          "version",
+          "app_id",
+          "user_id",
+          "device_id",
+          "token"
+        ]
+      }
+    ]
+  }
+]
