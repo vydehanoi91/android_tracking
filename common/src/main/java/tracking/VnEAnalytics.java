@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.provider.Settings;
 
 import com.google.gson.Gson;
@@ -15,7 +16,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 public class VnEAnalytics {
 
@@ -24,6 +29,18 @@ public class VnEAnalytics {
 
     public static void initValues(Context context) {
         debugMode = (0 != (context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
+    }
+
+    public static Map<String, String> bundleToMap(Bundle extras) {
+        Map<String, String> map = new HashMap<String, String>();
+
+        Set<String> ks = extras.keySet();
+        Iterator<String> iterator = ks.iterator();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            map.put(key, extras.getString(key));
+        }/*from   w ww .j  a  v  a 2s .c  o m*/
+        return map;
     }
 
     public static boolean isDebugMode() {
