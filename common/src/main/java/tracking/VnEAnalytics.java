@@ -28,13 +28,8 @@ import fpt.vne.common.R;
 public class VnEAnalytics {
 
     public static final Gson GSON = new Gson();
-    private static boolean debugMode = false;
 
-    public static void initValues(Context context) {
-        debugMode = (0 != (context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
-    }
-
-    public String logEvent(Context context, Bundle bundle) {
+    public static String getRequest(Context context, Bundle bundle) {
         String url = context.getString(R.string.base_url) + "?";
         for (Map.Entry<String, String> entry : bundleToMap(bundle).entrySet()) {
             String key = entry.getKey();
@@ -54,10 +49,6 @@ public class VnEAnalytics {
             map.put(key, extras.getString(key));
         }/*from   w ww .j  a  v  a 2s .c  o m*/
         return map;
-    }
-
-    public static boolean isDebugMode() {
-        return debugMode;
     }
 
     public static String getDeviceId(Context context) {
@@ -120,9 +111,9 @@ public class VnEAnalytics {
         return false;
     }
 
-    public static String stringFromHttpGet(String urlString) {
+    public static String logEvent(Context context, Bundle bundle) {
         try {
-            URL url = new URL(urlString);
+            URL url = new URL(getRequest(context, bundle));
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setConnectTimeout(5000);
             con.setReadTimeout(4000);
