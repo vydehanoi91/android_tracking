@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 
@@ -22,6 +23,8 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
+import fpt.vne.common.R;
+
 public class VnEAnalytics {
 
     public static final Gson GSON = new Gson();
@@ -29,6 +32,16 @@ public class VnEAnalytics {
 
     public static void initValues(Context context) {
         debugMode = (0 != (context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
+    }
+
+    public String logEvent(Context context, Bundle bundle) {
+        String url = context.getString(R.string.base_url) + "?";
+        for (Map.Entry<String, String> entry : bundleToMap(bundle).entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            url = url + key + "=" + value + ",";
+        }
+        return url;
     }
 
     public static Map<String, String> bundleToMap(Bundle extras) {
