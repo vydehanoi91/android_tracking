@@ -200,8 +200,9 @@ public class ApiAdapter {
                                 return getCacheResponse(cacheName);
                             }
                         } else {
-                            final String json = holder.debugJson != null
-                                    ? holder.debugJson : VnEAnalytics.stringFromHttpGet(url);
+                            /*final String json = holder.debugJson != null
+                                    ? holder.debugJson : VnEAnalytics.stringFromHttpGet(url);*/
+                            final String json = holder.debugJson;
 //                            LogUtils.error("API", "Result: " + json);
                             if (json != null && holder.expireCacheTime > 0)
                                 JsonCache.put(context, keyName, cacheName, holder.expireCacheTime, json);
@@ -220,7 +221,7 @@ public class ApiAdapter {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if(cacheName != null)
+                    if (cacheName != null)
                         return getCacheResponse(cacheName);
                 }
                 return null;
