@@ -34,9 +34,9 @@ public class VnEAnalytics {
         for (Map.Entry<String, String> entry : bundleToMap(bundle).entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            url = url + key + "=" + value + ",";
+            url = url + key + "=" + value + "&";
         }
-        return url;
+        return url.substring(0, url.length() - 1);
     }
 
     public static Map<String, String> bundleToMap(Bundle extras) {
@@ -47,7 +47,7 @@ public class VnEAnalytics {
         while (iterator.hasNext()) {
             String key = iterator.next();
             map.put(key, extras.getString(key));
-        }/*from   w ww .j  a  v  a 2s .c  o m*/
+        }
         return map;
     }
 
