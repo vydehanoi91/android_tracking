@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.provider.Settings;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
 
@@ -21,9 +23,12 @@ public class VnEAnalytics {
 
     public static final Gson GSON = new Gson();
     private static boolean debugMode = false;
+    private static String deviceId, deviceName;
 
-    public static void initValues(Context context) {
+    public static void initializeDefaultValue(Context context) {
         debugMode = (0 != (context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
+        deviceId = getDeviceId(context);
+        deviceName = getDeviceBrand() + " " + getDeviceModel();
     }
 
     public static boolean isDebugMode() {
@@ -88,6 +93,42 @@ public class VnEAnalytics {
             return activeNetwork.getType() == ConnectivityManager.TYPE_WIFI || activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE;
         }
         return false;
+    }
+
+    public static String getDeviceBrand() {
+        String manufacturer = Build.MANUFACTURER;
+        if (manufacturer.equalsIgnoreCase("HTC"))
+            return "HTC";
+        return capitalize(manufacturer);
+    }
+
+    public static String getDeviceModel() {
+        return Build.MODEL;
+    }
+
+    private static String capitalize(String str) {
+        if (TextUtils.isEmpty(str)) {
+            return str;
+        }
+        char[] arr = str.toCharArray();
+        boolean capitalizeNext = true;
+        String phrase = "";
+        try {
+            for (char c : arr) {
+                if (capitalizeNext && Character.isLetter(c)) {
+                    phrase += Character.toUpperCase(c);
+                    capitalizeNext = false;
+                    continue;
+                } else if (Character.isWhitespace(c)) {
+                    capitalizeNext = true;
+                }
+                phrase += c;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            phrase = "";
+        }
+        return phrase;
     }
 
     public static String stringFromHttpGet(String urlString) {
