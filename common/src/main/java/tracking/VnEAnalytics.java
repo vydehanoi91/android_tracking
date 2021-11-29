@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.os.Bundle;
 import android.os.Build;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -17,7 +19,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
+
+import fpt.vne.common.R;
 
 public class VnEAnalytics {
 
@@ -34,7 +42,27 @@ public class VnEAnalytics {
     public static boolean isDebugMode() {
         return debugMode;
     }
+    public static String getRequest(Context context, Bundle bundle) {
+        String url = context.getString(R.string.base_url) + "?";
+        for (Map.Entry<String, String> entry : bundleToMap(bundle).entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            url = url + key + "=" + value + "&";
+        }
+        return url.substring(0, url.length() - 1);
+    }
 
+    public static Map<String, String> bundleToMap(Bundle extras) {
+        Map<String, String> map = new HashMap<String, String>();
+
+        Set<String> ks = extras.keySet();
+        Iterator<String> iterator = ks.iterator();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            map.put(key, extras.getString(key));
+        }
+        return map;
+    }
     public static String getDeviceId(Context context) {
         return md5(getRealDeviceId(context));
     }
@@ -94,7 +122,6 @@ public class VnEAnalytics {
         }
         return false;
     }
-
     public static String getDeviceBrand() {
         String manufacturer = Build.MANUFACTURER;
         if (manufacturer.equalsIgnoreCase("HTC"))
@@ -130,10 +157,9 @@ public class VnEAnalytics {
         }
         return phrase;
     }
-
-    public static String stringFromHttpGet(String urlString) {
+    public static String logEvent(Context context, Bundle bundle) {
         try {
-            URL url = new URL(urlString);
+            URL url = new URL(getRequest(context, bundle));
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setConnectTimeout(5000);
             con.setReadTimeout(4000);

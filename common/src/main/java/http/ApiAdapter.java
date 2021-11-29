@@ -2,17 +2,11 @@ package http;
 
 import android.app.Activity;
 import android.content.Context;
-import android.net.Uri;
 import android.util.SparseArray;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -22,7 +16,6 @@ import model.ApiGroup;
 import model.ApiHolder;
 import model.Catcher;
 import model.PushHolder;
-import model.RequestName;
 import model.ResponseHolder;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -34,7 +27,6 @@ import okhttp3.ResponseBody;
 import task.Action;
 import task.Task;
 import tracking.VnEAnalytics;
-import util.LogUtils;
 
 public class ApiAdapter {
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddkkmmss", Locale.CHINA);
@@ -122,9 +114,9 @@ public class ApiAdapter {
                         }
                     }
 
-                    LogUtils.error("API", "==== START REQUEST =============================================");
+                    /*LogUtils.error("API", "==== START REQUEST =============================================");
                     LogUtils.error("API", "Method: " + (ant.isPost() ? "POST" : (ant.isPut() ? "PUT" : "GET")));
-                    LogUtils.error("API", "Url: " + url);
+                    LogUtils.error("API", "Url: " + url);*/
                     if (ant.fields != null && ant.fields.length > 0 && (ant.isPost() || ant.isPut())) {
                         String logFields = "Fields: [";
                         body = new MultipartBody.Builder().setType(MultipartBody.FORM);
@@ -132,7 +124,7 @@ public class ApiAdapter {
                             logFields += (ant.fields[i] + "=" + holder.fields[i] + (i < ant.fields.length - 1 ? ", " : ""));
                             body.addFormDataPart(ant.fields[i], holder.fields[i]);
                         }
-                        LogUtils.error("API", logFields + "]");
+//                        LogUtils.error("API", logFields + "]");
                     }
                     final Request.Builder builder = new Request.Builder().url(url);
                     if (ant.type != null)
@@ -146,8 +138,8 @@ public class ApiAdapter {
                             builder.put(RequestBody.create(MediaType.parse(ant.type), holder.body));
                         if (ant.isPost())
                             builder.post(RequestBody.create(MediaType.parse(ant.type), holder.body));
-                        LogUtils.error("API", "Content-type: " + ant.type);
-                        LogUtils.error("API", "Body: " + holder.body);
+                        /*LogUtils.error("API", "Content-type: " + ant.type);
+                        LogUtils.error("API", "Body: " + holder.body);*/
                     }
                     if (body != null) {
                         if (ant.isPost()) {
@@ -201,16 +193,17 @@ public class ApiAdapter {
                                         return getCacheResponse(cacheName);
                                     }
                                 } else {
-                                    LogUtils.error("API", "Result: " + response.code());
+//                                    LogUtils.error("API", "Result: " + response.code());
                                     return getCacheResponse(cacheName);
                                 }
                             } else {
                                 return getCacheResponse(cacheName);
                             }
                         } else {
-                            final String json = holder.debugJson != null
-                                    ? holder.debugJson : VnEAnalytics.stringFromHttpGet(url);
-                            LogUtils.error("API", "Result: " + json);
+                            /*final String json = holder.debugJson != null
+                                    ? holder.debugJson : VnEAnalytics.stringFromHttpGet(url);*/
+                            final String json = holder.debugJson;
+//                            LogUtils.error("API", "Result: " + json);
                             if (json != null && holder.expireCacheTime > 0)
                                 JsonCache.put(context, keyName, cacheName, holder.expireCacheTime, json);
                             if (holder.catcher != null) {
@@ -228,7 +221,7 @@ public class ApiAdapter {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if(cacheName != null)
+                    if (cacheName != null)
                         return getCacheResponse(cacheName);
                 }
                 return null;

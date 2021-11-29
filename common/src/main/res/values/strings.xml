@@ -1,3 +1,4 @@
 <resources>
     <string name="key_content_type">Content-Type</string>
+    <string name="base_url">https://my.vnexpress.net</string>
 </resources>
