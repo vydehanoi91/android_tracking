@@ -28,20 +28,16 @@ import java.util.Set;
 import fpt.vne.common.R;
 
 public class VnEAnalytics {
-
+    private static Context mContext;
     public static final Gson GSON = new Gson();
-    private static boolean debugMode = false;
-    private static String deviceId, deviceName;
+    private static String deviceId, deviceName, appId, Os;
 
     public static void initializeDefaultValue(Context context) {
-        debugMode = (0 != (context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
+        mContext = context;
         deviceId = getDeviceId(context);
         deviceName = getDeviceBrand() + " " + getDeviceModel();
     }
 
-    public static boolean isDebugMode() {
-        return debugMode;
-    }
     public static String getRequest(Context context, Bundle bundle) {
         String url = context.getString(R.string.base_url) + "?";
         for (Map.Entry<String, String> entry : bundleToMap(bundle).entrySet()) {
@@ -63,6 +59,7 @@ public class VnEAnalytics {
         }
         return map;
     }
+
     public static String getDeviceId(Context context) {
         return md5(getRealDeviceId(context));
     }
@@ -122,6 +119,7 @@ public class VnEAnalytics {
         }
         return false;
     }
+
     public static String getDeviceBrand() {
         String manufacturer = Build.MANUFACTURER;
         if (manufacturer.equalsIgnoreCase("HTC"))
@@ -157,9 +155,18 @@ public class VnEAnalytics {
         }
         return phrase;
     }
-    public static String logEvent(Context context, Bundle bundle) {
+
+    public static void logEvent(String eventName, Bundle bundle) {
         try {
-            URL url = new URL(getRequest(context, bundle));
+            String url = getRequest(mContext, bundle);
+            createNewHttpRequest(url);
+        } catch (Exception e) {
+        }
+    }
+
+    public static String createNewHttpRequest(String strUrl) {
+        try {
+            URL url = new URL(strUrl);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setConnectTimeout(5000);
             con.setReadTimeout(4000);
