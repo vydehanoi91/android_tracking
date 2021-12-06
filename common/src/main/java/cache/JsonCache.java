@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import cache.model.CacheGroup;
-import tracking.VnEAnalytics;
+import common.Utils;
 
 
 public class JsonCache {
@@ -24,7 +24,7 @@ public class JsonCache {
             final SharedPreferences sp = getSharedPreferences(context, fileName);
             final String json = sp.getString(key, null);
             if(json != null) {
-                final CacheGroup cache = VnEAnalytics.GSON.fromJson(json, CacheGroup.class);
+                final CacheGroup cache = Utils.GSON.fromJson(json, CacheGroup.class);
                 return cache.content;
             }
         } catch (Exception e) {
@@ -42,9 +42,9 @@ public class JsonCache {
                 return null;
             final String json = sp.getString(key, null);
             if(json != null) {
-                final CacheGroup cache = VnEAnalytics.GSON.fromJson(json, CacheGroup.class);
+                final CacheGroup cache = Utils.GSON.fromJson(json, CacheGroup.class);
                 if(cache != null && (System.currentTimeMillis() - cache.last < cache.expire
-                        || !VnEAnalytics.isNetworkAvailable(context)))
+                        || !Utils.isNetworkAvailable(context)))
                     return cache.content;
             }
         } catch (Exception e) {
@@ -63,7 +63,7 @@ public class JsonCache {
             cache.last = System.currentTimeMillis();
             cache.content = json;
             if(sp != null) {
-                sp.edit().putString(key, VnEAnalytics.GSON.toJson(cache))
+                sp.edit().putString(key, Utils.GSON.toJson(cache))
                         .apply();
             }
         } catch (Exception e) {

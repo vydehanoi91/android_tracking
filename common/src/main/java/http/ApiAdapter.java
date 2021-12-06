@@ -11,6 +11,7 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import cache.JsonCache;
+import common.Utils;
 import fpt.vne.common.R;
 import model.ApiGroup;
 import model.ApiHolder;
@@ -47,11 +48,11 @@ public class ApiAdapter {
     public static ApiHolder getHolder(Context context, int id) {
         if (api == null || api.size() == 0) {
             String constants = "";
-            final String json = VnEAnalytics.getRawData(context, R.raw.data_api);
+            final String json = Utils.getRawData(context, R.raw.data_api);
             if (json == null || json.trim().length() < 10)
                 return null;
             api = new SparseArray<>();
-            final ApiGroup[] groups = VnEAnalytics.GSON.fromJson(json, ApiGroup[].class);
+            final ApiGroup[] groups = Utils.GSON.fromJson(json, ApiGroup[].class);
             for (ApiGroup group : groups) {
                 final ApiHolder[] holders = group.holders;
                 if (holders != null) {
@@ -158,7 +159,7 @@ public class ApiAdapter {
                         okHttpClient = okHttpBuilder.build();
                     }
 
-                    if (VnEAnalytics.isNetworkAvailable(context)) {
+                    if (Utils.isNetworkAvailable(context)) {
                         final String cache = holder.clearCache ? null : JsonCache.getCache(context, keyName, cacheName);
                         if (cache != null && holder.expireCacheTime > 0) {
                             if (holder.catcher != null) {
@@ -283,7 +284,7 @@ public class ApiAdapter {
                             if (clazz.equals(String.class)) {
                                 holder.data = jsonData;
                             } else {
-                                holder.data = VnEAnalytics.GSON.fromJson(jsonData, clazz);
+                                holder.data = Utils.GSON.fromJson(jsonData, clazz);
                             }
                         }
                         if (holder.message == null) {
