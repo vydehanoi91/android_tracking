@@ -63,6 +63,7 @@ public final class VnEAnalytics {
 
     private String createNewHttpRequest(String strUrl) {
         try {
+            Log.d("TAG", "createNewHttpRequest: uuuuuuuuuuuuuu-----"+strUrl);
             URL url = new URL(strUrl);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setConnectTimeout(5000);
