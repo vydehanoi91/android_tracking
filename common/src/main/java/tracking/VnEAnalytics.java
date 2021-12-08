@@ -13,20 +13,16 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import common.Utils;
 import fpt.vne.common.R;
 
 public final class VnEAnalytics {
     private static VnEAnalytics vnEAnalytics;
     private static Context mContext;
     private static final Object LOCK = new Object();
-    private static String deviceId, deviceName, appId, Os;
+    private static String appId, os, sdk;
 
     public static VnEAnalytics getInstance(Context context) {
         mContext = context;
-        deviceId = Utils.getDeviceId(context);
-        deviceName = Utils.getDeviceBrand() + " " + Utils.getDeviceModel();
-
         if (vnEAnalytics == null) {
             synchronized (LOCK) {
                 vnEAnalytics = new VnEAnalytics();
@@ -36,16 +32,20 @@ public final class VnEAnalytics {
     }
 
     public void setAppId(String appId) {
-        VnEAnalytics.appId = appId;
+        this.appId = appId;
     }
 
     public void setOs(String os) {
-        Os = os;
+        this.os = os;
+    }
+
+    public void setSdk(String sdk) {
+        this.sdk = sdk;
     }
 
     public void logEvent(String eventName, Bundle bundle) {
         try {
-            String domain = mContext.getString(R.string.str_url) + eventName + "?&os=" + Os + "&app_id=" + appId + "&";
+            String domain = mContext.getString(R.string.str_url) + eventName + "?&os=" + os + "&app_id=" + appId + "&";
             String url = getRequest(bundle, domain);
             createNewHttpRequest(url);
         } catch (Exception e) {
@@ -61,9 +61,18 @@ public final class VnEAnalytics {
         }
     }
 
+    public void setUserProperties(String eventName, Bundle bundle) {
+        try {
+            String domain = mContext.getString(R.string.str_url) + eventName + "?";
+            String url = getRequest(bundle, domain);
+            createNewHttpRequest(url);
+        } catch (Exception e) {
+        }
+    }
+
     private String createNewHttpRequest(String strUrl) {
         try {
-            Log.d("TAG", "createNewHttpRequest: uuuuuuuuuuuuuu-----"+strUrl);
+            Log.d("TAG", "createNewHttpRequest: uuuuuuuuuuuuuu-----" + strUrl);
             URL url = new URL(strUrl);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setConnectTimeout(5000);
@@ -86,7 +95,16 @@ public final class VnEAnalytics {
     private String getRequest(Bundle bundle, String url) {
         for (Map.Entry<String, String> entry : bundleToMap(bundle).entrySet()) {
             String key = entry.getKey();
-            String value = entry.getValue();
+            String value;
+            if (key.equals("device_id")) {
+                value = "dv";
+            } else if (key.equals("user_id ")) {
+                value = "myvne_id";
+            } else if (key.equals("user_email")) {
+                value = "vne_email";
+            } else {
+                value = entry.getValue();
+            }
             url = url + key + "=" + value + "&";
         }
         return url.substring(0, url.length() - 1);
