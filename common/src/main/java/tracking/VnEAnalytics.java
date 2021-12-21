@@ -43,28 +43,28 @@ public final class VnEAnalytics {
         this.sdk = sdk;
     }
 
-    public void logEvent(String eventName, Bundle bundle) {
+    public void logEvent(String domain, String eventName, Bundle bundle) {
         try {
-            String domain = mContext.getString(R.string.str_url) + eventName + "?&os=" + os + "&app_id=" + appId + "&";
-            String url = getRequest(bundle, domain);
+            String urlOriginal = domain + eventName + "?&os=" + os + "&app_id=" + appId + "&";
+            String url = getRequest(bundle, urlOriginal);
             createNewHttpRequest(url);
         } catch (Exception e) {
         }
     }
 
-    public void logLoginOrLogoutEvent(String eventName, Bundle bundle) {
+    public void logLoginOrLogoutEvent(String domain, String eventName, Bundle bundle) {
         try {
-            String domain = mContext.getString(R.string.str_url) + eventName + "?";
-            String url = getRequest(bundle, domain);
+            String urlOriginal = domain + eventName + "?";
+            String url = getRequest(bundle, urlOriginal);
             createNewHttpRequest(url);
         } catch (Exception e) {
         }
     }
 
-    public void setUserProperties(String eventName, Bundle bundle) {
+    public void setUserProperties(String domain, String eventName, Bundle bundle) {
         try {
-            String domain = mContext.getString(R.string.str_url) + eventName + "?";
-            String url = getRequest(bundle, domain);
+            String urlOriginal = domain + eventName + "?";
+            String url = getRequest(bundle, urlOriginal);
             createNewHttpRequest(url);
         } catch (Exception e) {
         }
@@ -120,6 +120,11 @@ public final class VnEAnalytics {
             map.put(key, extras.getString(key));
         }
         return map;
+    }
+
+    public static class Domain {
+        public static final String LA2 = "http://la2.eclick.vn/";
+        public static final String LA3 = "https://la3.vnecdn.net/";
     }
 
     public static class Event {
