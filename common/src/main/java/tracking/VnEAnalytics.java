@@ -133,6 +133,7 @@ public final class VnEAnalytics {
     public static class Domain {
         public static final String LA2 = "http://la2.eclick.vn/";
         public static final String LA3 = "https://la3.vnecdn.net/";
+        public static final String LOGINANDREGISTER = "https://la2.vnecdn.net/";
     }
 
     public static class Event {
