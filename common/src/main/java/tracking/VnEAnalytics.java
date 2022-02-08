@@ -103,7 +103,7 @@ public final class VnEAnalytics {
         for (Map.Entry<String, String> entry : bundleToMap(bundle).entrySet()) {
             String key = entry.getKey();
             String value;
-            if (key.equals("device_id")) {
+            /*if (key.equals("device_id")) {
                 value = "dv";
             } else if (key.equals("user_id ")) {
                 value = "myvne_id";
@@ -111,7 +111,8 @@ public final class VnEAnalytics {
                 value = "vne_email";
             } else {
                 value = entry.getValue();
-            }
+            }*/
+            value = entry.getValue();
             url = url + key + "=" + value + "&";
         }
         return url.substring(0, url.length() - 1);
