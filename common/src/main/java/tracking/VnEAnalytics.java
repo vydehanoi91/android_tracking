@@ -136,10 +136,11 @@ public final class VnEAnalytics {
     }
 
     public static class Event {
-        public static final String PAGE_VIEW = "page_view";
+        public static final String PAGE_VIEW = "/page_view/";
         public static final String SCROLL_PERCENTAGE = "scroll_percentage";
-        public static final String LOGIN = "login";
-        public static final String LOGOUT = "logout";
-        public static final String FORGOT_PASSWORD = "forgot_password";
+        public static final String LOGINORREGISTER = "adp";
+        public static final String COMMENT = "/comment/";
+        public static final String SAVE = "/save/";
+        public static final String SHARE = "/fbshare/";
     }
 }
