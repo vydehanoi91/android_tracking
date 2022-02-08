@@ -1,6 +1,7 @@
 package tracking;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -19,13 +20,15 @@ public final class VnEAnalytics {
     private static VnEAnalytics vnEAnalytics;
     private static Context mContext;
     private static final Object LOCK = new Object();
-    private static String appId, os, sdk;
+    private static String appId, os;
+    private static boolean debugMode = false;
 
     public static VnEAnalytics getInstance(Context context) {
         mContext = context;
         if (vnEAnalytics == null) {
             synchronized (LOCK) {
                 vnEAnalytics = new VnEAnalytics();
+                debugMode = (0 != (context.getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
             }
         }
         return vnEAnalytics;
@@ -39,15 +42,14 @@ public final class VnEAnalytics {
         this.os = os;
     }
 
-    public void setSdk(String sdk) {
-        this.sdk = sdk;
-    }
 
     public void logEvent(String domain, String eventName, Bundle bundle) {
         try {
-            String urlOriginal = domain + eventName + "?&os=" + os + "&app_id=" + appId + "&";
+            String urlOriginal = domain + eventName + "?&os=" + os + "&app_id=" + appId + "&sdk=1" + "&";
             String url = getRequest(bundle, urlOriginal);
-            createNewHttpRequest(url);
+            new Thread(() -> {
+                createNewHttpRequest(url);
+            }).start();
         } catch (Exception e) {
         }
     }
@@ -56,7 +58,9 @@ public final class VnEAnalytics {
         try {
             String urlOriginal = domain + eventName + "?";
             String url = getRequest(bundle, urlOriginal);
-            createNewHttpRequest(url);
+            new Thread(() -> {
+                createNewHttpRequest(url);
+            }).start();
         } catch (Exception e) {
         }
     }
@@ -65,14 +69,17 @@ public final class VnEAnalytics {
         try {
             String urlOriginal = domain + eventName + "?";
             String url = getRequest(bundle, urlOriginal);
-            createNewHttpRequest(url);
+            new Thread(() -> {
+                createNewHttpRequest(url);
+            }).start();
         } catch (Exception e) {
         }
     }
 
     private String createNewHttpRequest(String strUrl) {
         try {
-            Log.d("TAG", "createNewHttpRequest: uuuuuuuuuuuuuu-----" + strUrl);
+            if (debugMode)
+                Log.d("TAG", "createNewHttpRequest: uuuuuuuuuuuuuu-----" + strUrl);
             URL url = new URL(strUrl);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setConnectTimeout(5000);
