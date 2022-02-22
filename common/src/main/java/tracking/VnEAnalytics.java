@@ -79,7 +79,7 @@ public final class VnEAnalytics {
     private String createNewHttpRequest(String strUrl) {
         try {
             if (debugMode)
-                Log.d("TAG", "createNewHttpRequest: uuuuuuuuuuuuuu-----" + strUrl);
+                Log.d("TAG", "createNewHttpRequest: URL-----" + strUrl);
             URL url = new URL(strUrl);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setConnectTimeout(5000);
@@ -138,11 +138,13 @@ public final class VnEAnalytics {
     }
 
     public static class Event {
+        public static final String LA2_SCREEN_VIEW = "app";
         public static final String PAGE_VIEW = "/page_view/";
         public static final String SCROLL_PERCENTAGE = "scroll_percentage";
         public static final String LOGINORREGISTER = "adp";
         public static final String COMMENT = "/comment/";
         public static final String SAVE = "/save/";
         public static final String SHARE = "/fbshare/";
+        public static final String VIDEO = "video";
     }
 }
