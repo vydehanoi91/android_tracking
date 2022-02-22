@@ -146,5 +146,6 @@ public final class VnEAnalytics {
         public static final String SAVE = "/save/";
         public static final String SHARE = "/fbshare/";
         public static final String VIDEO = "video";
+        public static final String READ = "/read/";
     }
 }
