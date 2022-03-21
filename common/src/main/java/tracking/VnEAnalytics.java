@@ -45,7 +45,7 @@ public final class VnEAnalytics {
 
     public void logEvent(String domain, String eventName, Bundle bundle) {
         try {
-            String urlOriginal = domain + eventName + "?sdk=1" + "&";
+            String urlOriginal = domain + eventName /*+ "?sdk=1" + "&"*/;
             String url = getRequest(bundle, urlOriginal);
             new Thread(() -> {
                 createNewHttpRequest(url);
@@ -139,13 +139,13 @@ public final class VnEAnalytics {
 
     public static class Event {
         public static final String LA2_SCREEN_VIEW = "app";
-        public static final String PAGE_VIEW = "/page_view/";
+        public static final String PAGE_VIEW = "page_view/";
         public static final String SCROLL_PERCENTAGE = "scroll_percentage";
         public static final String LOGINORREGISTER = "adp";
-        public static final String COMMENT = "/comment/";
-        public static final String SAVE = "/save/";
-        public static final String SHARE = "/fbshare/";
+        public static final String COMMENT = "comment/";
+        public static final String SAVE = "save/";
+        public static final String SHARE = "fbshare/";
         public static final String VIDEO = "video";
-        public static final String READ = "/read/";
+        public static final String READ = "read/";
     }
 }
