@@ -45,7 +45,7 @@ public final class VnEAnalytics {
 
     public void logEvent(String domain, String eventName, Bundle bundle) {
         try {
-            String urlOriginal = domain + eventName /*+ "?sdk=1" + "&"*/;
+            String urlOriginal = domain + eventName;
             String url = getRequest(bundle, urlOriginal);
             new Thread(() -> {
                 createNewHttpRequest(url);
